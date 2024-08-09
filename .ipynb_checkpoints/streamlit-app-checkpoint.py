@@ -61,6 +61,11 @@ def load_npy(file):
     np_data = np.load(file)
     return np_data
 
+@st.cache_data
+def load_txt(file):
+    np_data = np.loadtxt(file, unpack=True, skiprows=1, usecols=(0,1))
+    return np_data
+
 bins = 10
 freq_grid = xp.arange(10, 2000, 2.5)
 redshift_grid = xp.linspace(0, 10, 1000)
@@ -115,6 +120,15 @@ for ii, line in enumerate(omegas):
 ax1.plot([0,0], [8,8], alpha=0, label=r'MDR: $\gamma=$' + f'${gamma}$, ' + r'$z_{\rm peak}=$' + f'${z_peak}$, ' + r'$\kappa=$' + f'${kappa}$')
 ax2.plot([20, 40], [5, 5], alpha=0, label=r'PP: $\alpha =$' + f' ${3.2} {wz:+.2f}z$')
 ax3.plot(freq_grid, total_omega_gw, lw=3, color='black', label=r'total $\bar{\Omega}_{\rm GW}$')
+
+# Load PI curve data
+freqs_O3, PI_O3 = load_txt('data/PICurve_O3.dat')
+freqs_design, PI_design = load_txt('data/PICurve_HLV_Design.dat')
+freqs_aplus, PI_aplus = load_txt('data/PICurve_Aplus_Design.dat')
+
+ax3.plot(freqs_O3,2.*PI_O3,color='black',label='O3 Sensitivity',zorder=20)
+ax3.plot(freqs_design,2.*PI_design,color='#5e5e5e',dashes=(2,1.5),label='Design HLV',lw=1.2,zorder=20)
+ax3.plot(freqs_aplus,2.*PI_aplus,color='#5e5e5e',dashes=(3,1,1,1),label='Design A+',lw=1.2,zorder=20)
 
 ax1.set_xlim(0, 10)
 ax1.set_yscale('log')
