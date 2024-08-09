@@ -1,4 +1,4 @@
-from gwpopulation.models.mass import MadauDickinsonRedshift
+from gwpopulation.models.redshift import MadauDickinsonRedshift
 
 class MadauDickinsonHeavisideRedshift(MadauDickinsonRedshift):
     base_variable_names = ["gamma", "z_peak", "kappa", "zmin", "zmax"]

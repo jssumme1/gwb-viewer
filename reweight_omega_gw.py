@@ -20,7 +20,7 @@ def reweight(proposal_samples, energies, zmin, zmax, wz=0, rate=13.0, gamma=3.3,
     bins = 10
     
     # initialize object
-    newpop = PopulationOmegaGW(models=models, frequency_array=freqs, backend='numpy')
+    newpop = PopulationOmegaGW(models=models, frequency_array=freqs)
     
     zmid = (zmax + zmin) / 2
     
@@ -54,7 +54,7 @@ def get_mass_distribution(zmin, zmax, wz=0, rate=13.0):
     return dRdm
 
 def get_redshift_distribution(zmin, zmax, rate=13.0, gamma=3.3, kappa=5.6, z_peak=1.9):
-    redshift_model = gwpop.models.redshift.MadauDickinsonHeavisideRedshift(z_max=10, cosmo_model='Planck18')
+    redshift_model = MadauDickinsonHeavisideRedshift(z_max=10, cosmo_model='Planck18')
     redshift_grid = xp.linspace(0, 10, 1000)
     
     params =  {'gamma': gamma, 'kappa': kappa, 'z_peak': z_peak,
