@@ -1,5 +1,5 @@
-gwpopulation=1.1.0
-matplotlib=3.9.1
-numpy=1.26.4
-popstock=0.0.1
-python=3.10.14
+gwpopulation==1.1.0
+matplotlib==3.9.1
+numpy==1.26.4
+popstock==0.0.1
+python==3.10.14
