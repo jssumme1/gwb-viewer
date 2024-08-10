@@ -72,8 +72,8 @@ redshift_grid = xp.linspace(0, 10, 1000)
 mass_grid = xp.linspace(2.01, 100, 1000)
 redshift_bins = xp.linspace(0, 10, bins+1)
 
-base_samples_name = 'data/proposal_samples'
-base_energies_name = 'data/energies'
+data_dir = 'data/'
+#data_dir = 'https://github.com/jssumme1/gwb-viewer/tree/main/data/'
 
 omegas, psis, masses = [], [], []
 for ii in range(len(redshift_bins)-1):
@@ -81,8 +81,8 @@ for ii in range(len(redshift_bins)-1):
     zmin = redshift_bins[ii]
     zmax = redshift_bins[ii+1]
     
-    samples_file = base_samples_name + f'_z{zmin:.0f}-{zmax:.0f}.json'
-    energies_file = base_energies_name + f'_z{zmin:.0f}-{zmax:.0f}.npy'
+    samples_file = data_dir + f'proposal_samples_z{zmin:.0f}-{zmax:.0f}.json'
+    energies_file = data_dir + f'energies_z{zmin:.0f}-{zmax:.0f}.npy'
 
     # load energies and samples file (and cache)
     proposal_samples = load_json(samples_file)
@@ -122,9 +122,9 @@ ax2.plot([20, 40], [5, 5], alpha=0, label=r'PP: $\alpha =$' + f' ${3.2} {wz:+.2f
 ax3.plot(freq_grid, total_omega_gw, lw=3, color='black', label=r'total $\bar{\Omega}_{\rm GW}$')
 
 # Load PI curve data
-freqs_O3, PI_O3 = load_txt('data/PICurve_O3.dat')
-freqs_design, PI_design = load_txt('data/PICurve_HLV_Design.dat')
-freqs_aplus, PI_aplus = load_txt('data/PICurve_Aplus_Design.dat')
+freqs_O3, PI_O3 = load_txt(data_dir + 'PICurve_O3.dat')
+freqs_design, PI_design = load_txt(data_dir + 'PICurve_HLV_Design.dat')
+freqs_aplus, PI_aplus = load_txt(data_dir + 'PICurve_Aplus_Design.dat')
 
 ax3.plot(freqs_O3,2.*PI_O3,color='black',label='O3 Sensitivity',zorder=20)
 ax3.plot(freqs_design,2.*PI_design,color='#5e5e5e',dashes=(2,1.5),label='Design HLV',lw=1.2,zorder=20)
@@ -190,6 +190,11 @@ with st.expander("See notes"):
  * This plot shows predicted stochastic gravitational-wave background from the population model displayed in the above two plots. The GW background is measured by $\bar{\Omega}_{\rm GW}$, which is equal to the overall energy density of ALL gravitational waves from coalescing stellar-mass binary black holes, divided by the critical energy density to make the universe flat. The GW background is not very energetic, because it is only around one part in 50,000 of the energy density from the photons we now observe from the cosmic microwave background.
  * There are a few factors that can affect how much of the GW background is from high-redshift binary black holes. Since the energy from GWs decays with the inverse square of the distance, high-redshift binary black holes will individually contribute less energy to the GW background. However, at high-redshifts, the volume of the universe increases, so there are more binary black hole coalescences. Additionally, if in the first figure, the merger rate has a positive slope at high-redshifts, then there will be an even greater contribution to the GW background from high-redshifts.
  * Another thing to note is that at large cosmological distances, GWs are redshifted to lower frequencies. You can see this in the GW background curves, as the high-redshift curves are shifted to the left. Also, larger-mass binary black hole systems will show up in the low-frequency area of the GW background because larger black holes are able to "touch" each others' event horizons earlier in their inspiral phase.
+""")
+
+st.subheader("About this app")
+st.markdown("""
+You can see how this works in the [GitHub repository](https://github.com/jssumme1/gwb-viewer).
 """)
 
 
