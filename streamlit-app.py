@@ -9,6 +9,7 @@ import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 
 import matplotlib as mpl
+mpl.rcParams.update(mpl.rcParamsDefault)
 mpl.rcParams['figure.figsize'] = (8,6)
 mpl.rcParams['xtick.labelsize'] = 22
 mpl.rcParams['ytick.labelsize'] = 22
