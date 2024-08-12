@@ -3,3 +3,4 @@ matplotlib==3.9.1
 numpy==1.26.4
 popstock==0.0.1
 wcosmo==0.2.2
+latex
