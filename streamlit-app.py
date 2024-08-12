@@ -23,8 +23,8 @@ mpl.rcParams['legend.fontsize'] = 22
 
 mpl.use('agg')
 from matplotlib import rc
-rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
-rc('text', usetex=True)
+#rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
+#rc('text', usetex=True)
 
 
 st.set_page_config(layout="centered",
