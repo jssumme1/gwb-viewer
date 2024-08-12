@@ -45,10 +45,10 @@ st.markdown("""
  * Your plots will appear below.
 """)
 
-rate = st.sidebar.slider(r'Local Merger Rate \mathcal{R_0}=\mathcal{R}(0)', 1.0, 50.0, 15.0) 
-gamma = st.sidebar.slider(r'Low-Redshift Power-Law Slope \gamma', -3.0, 6.0, 3.0)  
-z_peak = st.sidebar.slider(r'Merger Rate Peak Redshift z_{\rm peak}', 1.0, 5.0, 1.9) 
-kappa = st.sidebar.slider(r'High-Redshift Power-Law Slope \kappa', -6.0, 20.0, 5.6) 
+rate = st.sidebar.slider(r'Local Merger Rate $\mathcal{R_0}=\mathcal{R}(0)$', 1.0, 50.0, 15.0) 
+gamma = st.sidebar.slider(r'Low-Redshift Power-Law Slope $\gamma$', -3.0, 6.0, 3.0)  
+z_peak = st.sidebar.slider(r'Merger Rate Peak Redshift $z_{\rm peak}$', 1.0, 5.0, 1.9) 
+kappa = st.sidebar.slider(r'High-Redshift Power-Law Slope $\kappa$', -6.0, 20.0, 5.6) 
 wz = st.sidebar.slider('Evolutionary Slope of Mass Model Power-Law Index', -1.0, 1.0, 0.0)  # min, max, default
 
 ###############################################################################################################
