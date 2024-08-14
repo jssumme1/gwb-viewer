@@ -45,11 +45,16 @@ st.markdown("""
  * Your plots will appear below.
 """)
 
+st.sidebar.markdown("## Select Redshift Model Hyper-Parameters")
 rate = st.sidebar.slider(r'Local Merger Rate $\mathcal{R_0}=\mathcal{R}(0)$', 1.0, 50.0, 15.0) 
 gamma = st.sidebar.slider(r'Low-Redshift Power-Law Slope $\gamma$', -3.0, 6.0, 3.0)  
 z_peak = st.sidebar.slider(r'Merger Rate Peak Redshift $z_{\rm peak}$', 1.0, 5.0, 1.9) 
 kappa = st.sidebar.slider(r'High-Redshift Power-Law Slope $\kappa$', -6.0, 20.0, 5.6) 
-wz = st.sidebar.slider('Evolutionary Slope of Mass Model Power-Law Index', -1.0, 1.0, 0.0)  # min, max, default
+st.sidebar.markdown("## Select Mass Model Hyper-Parameters")
+alpha_z = st.sidebar.slider('Evolutionary Slope of Primary Mass Power-Law Index', -1.0, 1.0, 0.0)  # min, max, default
+beta_z = st.sidebar.slider('Evolutionary Slope of Mass Ratio Power-Law Index', -0.5, 0.5, 0.0)  # min, max, default
+lam_z = st.sidebar.slider('Evolutionary Slope of Fraction of BHs in Gaussian Peak', -0.004, 0.096, 0.0)  # min, max, default
+mpp_z = st.sidebar.slider('Evolutionary Slope of Mean Mass of Gaussian Peak', -3.0, 6.0, 0.0)  # min, max, default
 
 ###############################################################################################################
 ### RUN POPSTOCK AND ITERATE THROUGH REDSHIFT BINS ###
@@ -95,8 +100,9 @@ for ii in range(len(redshift_bins)-1):
     energies = load_npy(energies_file)
 
     # calculate Omega_GW, differential merger rate for mass model, and merger rate for redshift model
-    omega_gw = reweight(proposal_samples, energies, zmin, zmax, wz=wz, rate=rate, gamma=gamma, kappa=kappa, z_peak=z_peak)
-    dRdm = get_mass_distribution(zmin, zmax, wz=wz, rate=rate)
+    omega_gw = reweight(proposal_samples, energies, zmin, zmax, rate=rate, gamma=gamma, kappa=kappa, z_peak=z_peak,
+                        alpha_z=alpha_z, beta_z=beta_z, lam_z=lam_z, mpp_z=mpp_z)
+    dRdm = get_mass_distribution(zmin, zmax, alpha_z=alpha_z, lam_z=lam_z, mpp_z=mpp_z, rate=rate)
     Rz = get_redshift_distribution(zmin, zmax, rate=rate, gamma=gamma, kappa=kappa, z_peak=z_peak)
 
     omegas.append(omega_gw)
@@ -131,7 +137,15 @@ for ii, line in enumerate(omegas):
 
 # add invisible curves to create a legend that scales with axis sizes
 ax1.plot([0,0], [8,8], alpha=0, label=r'MDR: $\gamma=$' + f' ${gamma}$, ' + r'$z_{\rm peak}=$' + f' ${z_peak}$, ' + r'$\kappa=$' + f' ${kappa}$')
-ax2.plot([20, 40], [5, 5], alpha=0, label=r'PP: $\alpha =$' + f' ${3.2} {wz:+.2f}z$')
+if alpha_z != 0:
+    ax2.plot([20, 40], [5, 5], alpha=0, label=r'PP: $\alpha =$' + f' ${3.20} {alpha_z:+.2f}z$')
+if beta_z != 0:
+    ax2.plot([20, 40], [5, 5], alpha=0, label=r'PP: $\beta =$' + f' ${1.20} {beta_z:+.2f}z$')
+if lam_z != 0:
+    ax2.plot([20, 40], [5, 5], alpha=0, label=r'PP: $\lambda_{\rm peak} =$' + f' ${0.040} {lam_z:+.3f}z$')
+if mpp_z != 0:
+    ax2.plot([20, 40], [5, 5], alpha=0, label=r'PP: $\mu_{\rm peak} =$' + f' ${33.50} {alpha_z:+.2f}z$')
+
 # plot total Omega_GW
 ax3.plot(freq_grid, total_omega_gw, lw=3, color='black', label=r'total $\bar{\Omega}_{\rm GW}$')
 

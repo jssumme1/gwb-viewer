@@ -5,7 +5,8 @@ from gwpopulation.utils import xp
 from popstock.PopulationOmegaGW import PopulationOmegaGW
 import json
 
-def reweight(proposal_samples, energies, zmin, zmax, wz=0, rate=13.0, gamma=3.3, kappa=5.6, z_peak=1.9):
+def reweight(proposal_samples, energies, zmin, zmax, rate=13.0, gamma=3.3, kappa=5.6, z_peak=1.9, 
+             alpha_z=0, beta_z=0, lam_z=0, mpp_z=0):
     mass_model = gwpop.models.mass.SinglePeakSmoothedMassDistribution()
     redshift_model = MadauDickinsonHeavisideRedshift(z_max=10, cosmo_model='Planck18')
     
@@ -25,9 +26,9 @@ def reweight(proposal_samples, energies, zmin, zmax, wz=0, rate=13.0, gamma=3.3,
     zmid = (zmax + zmin) / 2
     
     # change population hyper-parameters
-    Lambda_0 =  {'alpha': 3.2 + wz * zmid, 'beta': 1.2, 'delta_m': 4.5, 'lam': 0.04, 'mmax': 85, 'mmin': 5.21, 
-                 'mpp': 33.5, 'sigpp': 3.8, 'gamma': gamma, 'kappa': kappa, 'z_peak': z_peak,
-                 'zmin': zmin, 'zmax': zmax, 'rate': rate}
+    Lambda_0 =  {'alpha': 3.2 + alpha_z * zmid, 'beta': 1.2 + beta_z * zmid, 'lam': 0.04 + lam_z * zmid, 
+                 'mpp': 33.5 + mpp_z * zmid, 'sigpp': 3.8, 'delta_m': 4.5, 'mmax': 85, 'mmin': 5.21,
+                 'gamma': gamma, 'kappa': kappa, 'z_peak': z_peak, 'zmin': zmin, 'zmax': zmax, 'rate': rate}
 
     # proposal samples
     for key in proposal_samples:
@@ -42,13 +43,13 @@ def reweight(proposal_samples, energies, zmin, zmax, wz=0, rate=13.0, gamma=3.3,
     
     return newpop.omega_gw
 
-def get_mass_distribution(zmin, zmax, wz=0, rate=13.0):
+def get_mass_distribution(zmin, zmax, alpha_z=0, lam_z=0, mpp_z=0, rate=13.0):
     mass_model = gwpop.models.mass.SinglePeakSmoothedMassDistribution()
     mass_grid = xp.linspace(2.01, 100, 1000)
     
     zmid = (zmax + zmin) / 2
-    params =  {'alpha': 3.2 + wz * zmid, 'delta_m': 4.5, 'lam': 0.04, 
-               'mmax': 85, 'mmin': 5.21, 'mpp': 33.5, 'sigpp': 3.8}
+    params =  {'alpha': 3.2 + wz * zmid, 'delta_m': 4.5, 'lam': 0.04 + lam_z * zmid, 
+               'mmax': 85, 'mmin': 5.21, 'mpp': 33.5 + mpp_z * zmid, 'sigpp': 3.8}
     
     dRdm = mass_model.p_m1({'mass_1': mass_grid}, **params) * rate
     return dRdm
