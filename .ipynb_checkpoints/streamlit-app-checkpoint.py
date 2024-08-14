@@ -41,20 +41,21 @@ st.markdown("""Visualize the stochastic gravitational-wave background that vario
 
 st.markdown("""
  * Use the first four sliders of the menu on the left to select the parameters of the redshift model.
- * Then use the fifth slider on the left to choose how the mass model evolves as a function of redshift.
+ * Then use the next four sliders on the left to choose how the mass model evolves as a function of redshift.
  * Your plots will appear below.
 """)
 
 st.sidebar.markdown("## Select Redshift Model Hyper-Parameters")
-rate = st.sidebar.slider(r'Local Merger Rate $\mathcal{R_0}=\mathcal{R}(0)$', 1.0, 50.0, 15.0) 
+rate = st.sidebar.slider(r'Local Merger Rate $\mathcal{R_0}=\mathcal{R}(0)$', 1.0, 50.0, 15.0) # min, max, default
 gamma = st.sidebar.slider(r'Low-Redshift Power-Law Slope $\gamma$', -3.0, 6.0, 3.0)  
 z_peak = st.sidebar.slider(r'Merger Rate Peak Redshift $z_{\rm peak}$', 1.0, 5.0, 1.9) 
 kappa = st.sidebar.slider(r'High-Redshift Power-Law Slope $\kappa$', -6.0, 20.0, 5.6) 
 st.sidebar.markdown("## Select Mass Model Hyper-Parameters")
-alpha_z = st.sidebar.slider('Evolutionary Slope of Primary Mass Power-Law Index', -1.0, 1.0, 0.0)  # min, max, default
-beta_z = st.sidebar.slider('Evolutionary Slope of Mass Ratio Power-Law Index', -0.5, 0.5, 0.0)  # min, max, default
-lam_z = st.sidebar.slider('Evolutionary Slope of Fraction of BHs in Gaussian Peak', -0.004, 0.096, 0.0)  # min, max, default
-mpp_z = st.sidebar.slider('Evolutionary Slope of Mean Mass of Gaussian Peak', -3.0, 6.0, 0.0)  # min, max, default
+alpha_z = st.sidebar.slider(r'Evolutionary Slope of Primary Mass Power-Law Index $\alpha$', -1.0, 1.0, 0.0)  
+beta_z = st.sidebar.slider(r'Evolutionary Slope of Mass Ratio Power-Law Index $\beta$', -0.5, 0.5, 0.0) 
+lam_z = st.sidebar.slider(r'Evolutionary Slope of Fraction of BHs in Gaussian Peak $\lambda_{\rm peak}$', 
+                          -0.004, 0.096, 0.0, step=0.001, format='%.3f')
+mpp_z = st.sidebar.slider(r'Evolutionary Slope of Mean Mass of Gaussian Peak $\mu_{\rm peak}$', -3.0, 6.0, 0.0) 
 
 ###############################################################################################################
 ### RUN POPSTOCK AND ITERATE THROUGH REDSHIFT BINS ###
@@ -136,15 +137,15 @@ for ii, line in enumerate(omegas):
     ax1.fill_between(redshift_grid, psis[ii], 0, edgecolor='black', lw=1, ls='-', alpha=0.5, color=cmap(norm(z)))
 
 # add invisible curves to create a legend that scales with axis sizes
-ax1.plot([0,0], [8,8], alpha=0, label=r'MDR: $\gamma=$' + f' ${gamma}$, ' + r'$z_{\rm peak}=$' + f' ${z_peak}$, ' + r'$\kappa=$' + f' ${kappa}$')
+ax1.plot([0,0], [8,8], alpha=0, label=r'$\gamma=$' + f' ${gamma}$, ' + r'$z_{\rm peak}=$' + f' ${z_peak}$, ' + r'$\kappa=$' + f' ${kappa}$')
 if alpha_z != 0:
-    ax2.plot([20, 40], [5, 5], alpha=0, label=r'PP: $\alpha =$' + f' ${3.20} {alpha_z:+.2f}z$')
+    ax2.plot([20, 40], [5, 5], alpha=0, label=r'$\alpha =$' + f' $3.20 {alpha_z:+.2f}z$')
 if beta_z != 0:
-    ax2.plot([20, 40], [5, 5], alpha=0, label=r'PP: $\beta =$' + f' ${1.20} {beta_z:+.2f}z$')
+    ax2.plot([20, 40], [5, 5], alpha=0, label=r'$\beta =$' + f' $1.20 {beta_z:+.2f}z$')
 if lam_z != 0:
-    ax2.plot([20, 40], [5, 5], alpha=0, label=r'PP: $\lambda_{\rm peak} =$' + f' ${0.040} {lam_z:+.3f}z$')
+    ax2.plot([20, 40], [5, 5], alpha=0, label=r'$\lambda_{\rm peak} =$' + f' $0.040 {lam_z:+.3f}z$')
 if mpp_z != 0:
-    ax2.plot([20, 40], [5, 5], alpha=0, label=r'PP: $\mu_{\rm peak} =$' + f' ${33.50} {alpha_z:+.2f}z$')
+    ax2.plot([20, 40], [5, 5], alpha=0, label=r'$\mu_{\rm peak} =$' + f' $33.50 {alpha_z:+.2f}z$')
 
 # plot total Omega_GW
 ax3.plot(freq_grid, total_omega_gw, lw=3, color='black', label=r'total $\bar{\Omega}_{\rm GW}$')
@@ -207,8 +208,10 @@ st.pyplot(fig2)
 with st.expander("See notes"):
     st.markdown(r"""
  * This plot shows the distribution of primary (more massive of the two black holes) masses in our population model. The area under the curve between masses on the x-axis corresponds to the merger rate. The height here is arbitrary, however, as curves corresponding to high-redshift bins are shifted upwards to increase visibility.
- * The population model we use here is known as the Power Law + Peak model. It parameterizes the distribution of primary black hole masses as a power-law ($m_1^{-\alpha}$) plus a peak (a Gaussian distribution), and smooths out the low-mass behavior (making it look like there is also a peak around $7~{\rm M}_{\odot}$). The mass ratio (smaller black hole mass / larger black hole mass) is also parameterized with a power-law ($q^\beta$), which we do not show here.
+ * The population model we use here is known as the Power Law + Peak model. It parameterizes the distribution of primary black hole masses as a power-law ($m_1^{-\alpha}$) plus a peak (a Gaussian distribution with mean $\mu_{\rm peak}$ which contributes some fraction $\lambda_{\rm peak}$ of total binary black hole coalescences), and smooths out the low-mass behavior (making it look like there is also a peak around $7~{\rm M}_{\odot}$). The mass ratio (smaller black hole mass / larger black hole mass) is also parameterized with a power-law ($q^\beta$), which we do not show here.
  * You can change the linear evolution of the parameter $\alpha$ (the power-law slope of the primary mass model) with the panel on the left. Notice how the curves change in slope with a different redshift evolution.
+ * You can also change the linear evolution of the parameter $\beta$ (the power-law slope for the mass ratio model, not shown here) with the panel on the left. This will not change the plotted mass model, but it will affect the gravitational-wave background below.
+ * Finally, you can change the location of the Gaussian peak ($\mu_{\rm peak}$), as well as the fraction of mergers that occur because of the Gaussian peak ($\lambda_{\rm peak}$). The probability distribution for the mass model is normalized such that there is probability $\lambda_{\rm peak}$ of drawing a black hole from the Gaussian peak, and a probability $1-\lambda_{\rm peak}$ of drawing a black hole from the power-law component.
 """)
 
 st.subheader('GW Background Energy Density vs Frequency')
